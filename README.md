@@ -718,6 +718,23 @@ public class WalletClient {
 - Records transaction with FAILED status
 - Returns `400 Bad Request` to client
 
+## Service Design Patterns
+
+### Client Pattern
+`WalletClient` handles all communication with Wallet Service. This keeps the HTTP calls separate from business logic and makes error handling easier.
+
+### Transaction Management
+Uses `@Transactional` to ensure operations complete fully or not at all. If something fails, all database changes are reversed automatically.
+
+### Unique Transaction IDs
+Every transaction gets a unique ID (like `TXN-xxxxx`). Even failed transactions are saved with their IDs for tracking and debugging.
+
+### Transfer Safety
+When transferring money:
+1. First, money is removed from sender's wallet
+2. Then, money is added to receiver's wallet
+3. If step 2 fails, the system records the failure
+
 
 ## Configuration
 
